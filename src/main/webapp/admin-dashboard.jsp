@@ -1,15 +1,27 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="com.sunrise.dao.DatabaseConnection" %>
 
 <%
-    
     String username = (String) session.getAttribute("username");
     String role = (String) session.getAttribute("role");
-
-   
     if (username == null || !"ADMIN".equalsIgnoreCase(role)) {
         response.sendRedirect("login.jsp");
         return;
     }
+    
+   
+    Connection conn = DatabaseConnection.getInstance().getConnection();
+    PreparedStatement psStaff = conn.prepareStatement("SELECT COUNT(*) FROM users WHERE role != 'ADMIN'");
+    ResultSet rsStaff = psStaff.executeQuery();
+    rsStaff.next();
+    int totalStaff = rsStaff.getInt(1);
+    
+    
+    PreparedStatement psPatients = conn.prepareStatement("SELECT COUNT(*) FROM patients");
+    ResultSet rsPatients = psPatients.executeQuery();
+    rsPatients.next();
+    int totalPatients = rsPatients.getInt(1);
 %>
 
 <!DOCTYPE html>
@@ -25,7 +37,6 @@
             min-height: 100vh;
         }
 
-        
         .top-header {
             background-color: #263E5E;
             padding: 15px 30px;
@@ -63,7 +74,6 @@
             background-color: #A5301F;
         }
 
-        
         .main-content {
             padding: 40px 50px;
             max-width: 1000px;
@@ -82,7 +92,6 @@
             margin-bottom: 40px;
         }
 
-        
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -114,7 +123,6 @@
             margin-top: 5px;
         }
 
-        
         .quick-links {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -143,7 +151,6 @@
             transform: translateY(-3px);
         }
 
-       
         .welcome-banner {
             background-color: #3D83C7;
             color: white;
@@ -164,7 +171,6 @@
 </head>
 <body>
 
-    
     <div class="top-header">
         <div class="logo">
             <img src="logo.png" alt="Sunrise Dental">
@@ -175,32 +181,31 @@
         </div>
     </div>
 
-   
     <div class="main-content">
 
-        
         <div class="welcome-banner">
             <h2>Welcome, <%= username %>!</h2>
             <p>You are logged in as Administrator. Manage your clinic from here.</p>
         </div>
 
-        
         <div class="card-grid">
             <div class="card">
-                <div class="number">0</div>
+                <div class="number"><%= totalStaff %></div>
                 <div class="label">Total Staff</div>
             </div>
             <div class="card">
-                <div class="number">0</div>
+                <div class="number"><%= totalPatients %></div>
                 <div class="label">Total Patients</div>
             </div>
         </div>
 
-      
         <h2 style="color:#263E5E; margin-bottom: 20px;">Quick Actions</h2>
         <div class="quick-links">
             <a href="view-patients.jsp" class="quick-link">
                 View Patients
+            </a>
+            <a href="view-staff.jsp" class="quick-link">
+                View Staff
             </a>
             <a href="add-staff.jsp" class="quick-link">
                 Add Staff
