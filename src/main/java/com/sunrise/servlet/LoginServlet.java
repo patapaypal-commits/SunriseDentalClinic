@@ -26,7 +26,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("username", username);
                 session.setAttribute("role", rs.getString("role"));
                 
-                // CHECK IF ADMIN
+                
                 String role = rs.getString("role");
                 if (role.equalsIgnoreCase("ADMIN")) {
                     response.sendRedirect("admin-dashboard.jsp");
