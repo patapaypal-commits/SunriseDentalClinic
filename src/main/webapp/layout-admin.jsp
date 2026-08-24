@@ -1,0 +1,269 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="com.sunrise.dao.DatabaseConnection" %>
+
+<%
+    String username = (String) session.getAttribute("username");
+    String role = (String) session.getAttribute("role");
+    if (username == null || !"ADMIN".equalsIgnoreCase(role)) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    String pageName = request.getParameter("page");
+    if (pageName == null) pageName = "dashboard";
+
+    
+    Connection conn = DatabaseConnection.getInstance().getConnection();
+    PreparedStatement psStaff = conn.prepareStatement("SELECT COUNT(*) FROM users WHERE role != 'ADMIN'");
+    ResultSet rsStaff = psStaff.executeQuery();
+    rsStaff.next();
+    int totalStaff = rsStaff.getInt(1);
+
+    PreparedStatement psPatients = conn.prepareStatement("SELECT COUNT(*) FROM patients");
+    ResultSet rsPatients = psPatients.executeQuery();
+    rsPatients.next();
+    int totalPatients = rsPatients.getInt(1);
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - Sunrise Dental</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+       
+        body { 
+            background-color: #1A1A2E; 
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif; 
+            min-height: 100vh; 
+            color: #263E5E; 
+        }
+        
+        .dashboard { 
+            min-height: 100vh; 
+            display: flex; 
+            padding: 28px; 
+            gap: 20px; 
+        }
+        
+        
+        .sidebar { 
+            width: 220px; 
+            background-color: #171717; 
+            border-radius: 22px; 
+            padding: 28px 18px; 
+            display: flex; 
+            flex-direction: column; 
+            color: white; 
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); 
+            flex-shrink: 0; 
+        }
+        
+        .logo { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 85px; 
+            margin-bottom: 28px; 
+        }
+        .logo img { 
+            max-width: 125px; 
+            max-height: 75px; 
+            object-fit: contain; 
+        }
+        
+        .side-menu { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        .side-item { 
+            height: 52px; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 0 18px; 
+            color: #bdbdbd; 
+            font-size: 14px; 
+            font-weight: 500; 
+            text-decoration: none; 
+        }
+        .side-item.active { 
+            background-color: #3D83C7; 
+            color: white; 
+        }
+        .side-item:hover { 
+            background-color: #252525; 
+            color: white; 
+        }
+        .side-item.active:hover { 
+            background-color: #3D83C7; 
+        }
+        .side-icon { 
+            width: 22px; 
+            text-align: center; 
+            font-size: 18px; 
+        }
+        .sidebar-bottom { 
+            margin-top: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        
+        
+        .content { 
+            flex: 1; 
+            padding: 5px 0 5px 0; 
+            min-width: 0; 
+            background: transparent; 
+        }
+        
+        
+        .top-bar { 
+            height: 75px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 10px 0 0; 
+            margin-bottom: 20px; 
+            background: rgba(255, 255, 255, 0.08); 
+            border-radius: 18px; 
+            padding: 0 24px; 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        
+        .page-title h1 { 
+            font-size: 22px; 
+            font-weight: 600; 
+            color: #FFFFFF; 
+            text-transform: capitalize; 
+        }
+        
+        .user-area { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        
+        .profile { 
+            display: flex; 
+            align-items: center; 
+            gap: 11px; 
+            padding-left: 5px; 
+        }
+        .profile-avatar { 
+            width: 43px; 
+            height: 43px; 
+            border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.15); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: #FFFFFF; 
+            font-size: 17px; 
+            font-weight: 700; 
+        }
+        .profile-text { 
+            line-height: 1.3; 
+        }
+        .profile-text strong { 
+            display: block; 
+            font-size: 14px; 
+            color: #FFFFFF; 
+            font-weight: 600; 
+        }
+        .profile-text span { 
+            display: block; 
+            font-size: 12px; 
+            color: rgba(255, 255, 255, 0.6); 
+            margin-top: 2px; 
+        }
+        
+        .logout-btn { 
+            color: #bdbdbd; 
+            text-decoration: none; 
+        }
+        .logout-btn:hover { 
+            color: white; 
+        }
+
+        @media (max-width: 900px) { 
+            .dashboard { padding: 15px; } 
+            .sidebar { width: 180px; } 
+            .content { padding-left: 0; } 
+        }
+        @media (max-width: 700px) { 
+            .dashboard { display: block; } 
+            .sidebar { width: 100%; margin-bottom: 15px; } 
+            .side-menu { flex-direction: row; flex-wrap: wrap; } 
+            .sidebar-bottom { margin-top: 10px; } 
+            .content { padding: 0; } 
+            .top-bar { padding: 0 15px; } 
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    
+    <aside class="sidebar">
+        <div class="logo"><img src="logo.png" alt="Sunrise Dental"></div>
+        <div class="side-menu">
+            <a href="LayoutServlet?page=dashboard" class="side-item <%= "dashboard".equals(pageName) ? "active" : "" %>">
+                <span class="side-icon">▦</span><span>Dashboard</span>
+            </a>
+            <a href="LayoutServlet?page=view-patients" class="side-item <%= "view-patients".equals(pageName) ? "active" : "" %>">
+                <span class="side-icon">●</span><span>View Patients</span>
+            </a>
+            <a href="LayoutServlet?page=view-staff" class="side-item <%= "view-staff".equals(pageName) ? "active" : "" %>">
+                <span class="side-icon">●</span><span>View Staff</span>
+            </a>
+            <a href="LayoutServlet?page=add-staff" class="side-item <%= "add-staff".equals(pageName) ? "active" : "" %>">
+                <span class="side-icon">+</span><span>Add Staff</span>
+            </a>
+        </div>
+        <div class="sidebar-bottom">
+            <a href="logout.jsp" class="side-item logout-btn">
+                <span class="side-icon">⇥</span><span>Log Out</span>
+            </a>
+        </div>
+    </aside>
+
+    
+    <main class="content">
+
+       
+        <div class="top-bar">
+            <div class="page-title"><h1><%= pageName.replace("-", " ") %></h1></div>
+            <div class="user-area">
+                <div class="profile">
+                    <div class="profile-avatar"><%= username.substring(0, 1).toUpperCase() %></div>
+                    <div class="profile-text">
+                        <strong><%= username %></strong>
+                        <span><%= role %></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+        <%
+            String contentPage = "admin-dashboard-content.jsp";
+            if ("view-patients".equals(pageName)) contentPage = "view-patients.jsp";
+            else if ("view-staff".equals(pageName)) contentPage = "view-staff.jsp";
+            else if ("add-staff".equals(pageName)) contentPage = "add-staff.jsp";
+        %>
+        <jsp:include page="<%= contentPage %>" />
+
+    </main>
+
+</div>
+
+</body>
+</html>
