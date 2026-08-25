@@ -198,7 +198,7 @@
             <tr>
                 <td colspan="5">
                     <div class="empty-state">
-                        <span class="icon">📋</span>
+                        <span class="icon"></span>
                         No patients found. Start by registering a new patient.
                     </div>
                 </td>
