@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/PatientServlet")
 public class PatientServlet extends HttpServlet {
 
-    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         String name = request.getParameter("name");
@@ -31,13 +30,11 @@ public class PatientServlet extends HttpServlet {
         request.getRequestDispatcher("register-patient.jsp").forward(request, response);
     }
 
- 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
         String role = (String) session.getAttribute("role");
-        
         
         if (!"ADMIN".equalsIgnoreCase(role)) {
             response.sendRedirect("login.jsp");
@@ -55,15 +52,16 @@ public class PatientServlet extends HttpServlet {
                 PreparedStatement ps = conn.prepareStatement("DELETE FROM patients WHERE patient_id=?");
                 ps.setInt(1, id);
                 ps.executeUpdate();
-                request.setAttribute("successMsg", "Patient deleted successfully!");
+                session.setAttribute("successMsg", "Patient deleted successfully!");
             }
 
-            request.getRequestDispatcher("view-patients.jsp").forward(request, response);
+            
+            response.sendRedirect("LayoutServlet?page=view-patients");
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMsg", "Database Error: " + e.getMessage());
-            request.getRequestDispatcher("view-patients.jsp").forward(request, response);
+            session.setAttribute("errorMsg", "Database Error: " + e.getMessage());
+            response.sendRedirect("LayoutServlet?page=view-patients");
         }
     }
 }

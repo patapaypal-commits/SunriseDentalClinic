@@ -26,12 +26,11 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("username", username);
                 session.setAttribute("role", rs.getString("role"));
                 
-                
                 String role = rs.getString("role");
                 if (role.equalsIgnoreCase("ADMIN")) {
-                    response.sendRedirect("admin-dashboard.jsp");
+                    response.sendRedirect("LayoutServlet?page=dashboard");
                 } else {
-                    response.sendRedirect("register-patient.jsp");
+                    response.sendRedirect("user-dashboard.jsp");
                 }
             } else {
                 request.setAttribute("errorMessage", "Invalid Credentials!");
