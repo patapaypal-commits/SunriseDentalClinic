@@ -307,7 +307,7 @@
             margin-top: 5px;
         }
 
-        /* SIDE INFO */
+       
         .info-card {
             padding-bottom: 20px;
         }
@@ -409,7 +409,7 @@
 
 <div class="dashboard">
 
-    <!-- SIDEBAR -->
+    
     <aside class="sidebar">
 
         <div class="logo">
@@ -457,10 +457,10 @@
     </aside>
 
 
-    <!-- MAIN CONTENT -->
+   
     <main class="content">
 
-        <!-- TOP BAR -->
+       
         <div class="top-bar">
 
             <div class="page-title">
@@ -490,7 +490,7 @@
         </div>
 
 
-        <!-- WELCOME -->
+        
         <div class="welcome-card">
 
             <div class="welcome-content">
@@ -501,10 +501,10 @@
         </div>
 
 
-        <!-- DASHBOARD CARDS -->
+       
         <div class="dashboard-grid">
 
-            <!-- QUICK ACTIONS -->
+           
             <div class="card">
 
                 <div class="card-header">
@@ -531,7 +531,7 @@
             </div>
 
 
-            <!-- USER INFORMATION -->
+           
             <div class="card info-card">
 
                 <div class="card-header">

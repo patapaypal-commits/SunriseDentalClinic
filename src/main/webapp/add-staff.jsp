@@ -7,219 +7,158 @@
         response.sendRedirect("login.jsp");
         return;
     }
+
+    String successMsg = (String) session.getAttribute("successMsg");
+    String errorMsg = (String) session.getAttribute("errorMsg");
+    if (successMsg != null) {
+        session.removeAttribute("successMsg");
+    }
+    if (errorMsg != null) {
+        session.removeAttribute("errorMsg");
+    }
 %>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Staff - Sunrise Dental</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            background-color: #F4F8FB;
-            font-family: 'Times New Roman', Times, serif;
-            min-height: 100vh;
-        }
+    .content-wrapper {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(16px);
+        border-radius: 18px;
+        padding: 32px 36px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        max-width: 640px;
+        margin: 0 auto;
+    }
 
-       
-        .top-header {
-            background-color: #263E5E;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        .top-header .logo img {
-            height: 72px;
-            display: block;
-        }
-        .top-header .user-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .top-header .user-info .name {
-            color: white;
-            font-size: 16px;
-        }
-        .top-header .user-info .logout-btn {
-            background-color: #C0392B;
-            color: white;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .top-header .user-info .logout-btn:hover {
-            background-color: #A5301F;
-        }
+    .page-header {
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
 
-       
-        .main-content {
-            padding: 40px 50px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    .page-header h2 {
+        color: #FFFFFF;
+        font-size: 22px;
+        font-weight: 600;
+    }
 
-        .main-content h1 {
-            color: #263E5E;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        .main-content .subtitle {
-            color: #687789;
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
+    .page-header p {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 14px;
+        margin-top: 6px;
+    }
 
-       
-        .form-card {
-            background: #FFFFFF;
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid #D4E3EB;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+    .form-group {
+        margin-bottom: 20px;
+    }
 
-        .form-card label {
-            color: #263E5E;
-            font-weight: bold;
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-        }
+    .form-group label {
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 600;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 6px;
+    }
 
-        .form-card input {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            border: 1px solid #D4E3EB;
-            border-radius: 6px;
-            font-size: 15px;
-            box-sizing: border-box;
-            font-family: 'Times New Roman', Times, serif;
-            transition: border-color 0.3s;
-        }
+    .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        font-size: 15px;
+        font-family: 'Times New Roman', Times, serif;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        background: rgba(255, 255, 255, 0.04);
+        color: #FFFFFF;
+    }
 
-        .form-card input:focus {
-            outline: none;
-            border-color: #3D83C7;
-        }
+    .form-group input:focus {
+        outline: none;
+        border-color: #3D83C7;
+        box-shadow: 0 0 0 3px rgba(61, 131, 199, 0.15);
+        background: rgba(255, 255, 255, 0.06);
+    }
 
-        .form-card .btn {
-            background-color: #3D83C7;
-            color: white;
-            padding: 14px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            font-family: 'Times New Roman', Times, serif;
-            transition: background-color 0.3s;
-            width: 100%;
-        }
+    .form-group input::placeholder {
+        color: rgba(255, 255, 255, 0.25);
+    }
 
-        .form-card .btn:hover {
-            background-color: #2C6FA8;
-        }
+    .btn-submit {
+        background: rgba(61, 131, 199, 0.8);
+        color: white;
+        padding: 14px 28px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: 'Times New Roman', Times, serif;
+        transition: background 0.3s;
+        width: 100%;
+        margin-top: 4px;
+    }
 
-        
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #3D83C7;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
+    .btn-submit:hover {
+        background: #3D83C7;
+    }
 
-        
-        .msg {
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .msg-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .msg-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
-</head>
-<body>
+    .msg {
+        padding: 14px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-align: center;
+    }
+    .msg-success { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.15); }
+    .msg-error { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.15); }
+</style>
 
-   
-    <div class="top-header">
-        <div class="logo">
-            <img src="logo.png" alt="Sunrise Dental">
-        </div>
-        <div class="user-info">
-            <span class="name">Welcome, <strong><%= username %></strong></span>
-            <a href="logout.jsp" class="logout-btn">Logout</a>
-        </div>
+<div class="content-wrapper">
+
+    <div class="page-header">
+        <h2>Add New Staff</h2>
+        <p>Create a new account for staff members to login to the system.</p>
     </div>
 
-   
-    <div class="main-content">
-        <h1>Add New Staff</h1>
-        <p class="subtitle">Create a new account for staff members to login to the system.</p>
+    <%
+        if (successMsg != null) {
+    %>
+        <div class="msg msg-success"><%= successMsg %></div>
+    <%
+        }
+        if (errorMsg != null) {
+    %>
+        <div class="msg msg-error"><%= errorMsg %></div>
+    <%
+        }
+    %>
 
-        
-        <%
-            String successMsg = (String) request.getAttribute("successMsg");
-            String errorMsg = (String) request.getAttribute("errorMsg");
-            if (successMsg != null) {
-        %>
-            <div class="msg msg-success"><%= successMsg %></div>
-        <%
-            }
-            if (errorMsg != null) {
-        %>
-            <div class="msg msg-error"><%= errorMsg %></div>
-        <%
-            }
-        %>
+    <form action="StaffServlet" method="post">
+        <input type="hidden" name="action" value="add">
 
-        
-        <div class="form-card">
-            <form action="StaffServlet" method="post">
-                <input type="hidden" name="action" value="add">
-
-                <label>Employee ID</label>
-                <input type="text" name="employeeId" placeholder="Enter employee ID (e.g., EMP001)" required>
-
-                <label>Employee Name</label>
-                <input type="text" name="employeeName" placeholder="Enter full name" required>
-
-                <label>Username</label>
-                <input type="text" name="username" placeholder="Enter username for login" required>
-
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Enter password" required>
-
-                <button type="submit" class="btn">Add Staff</button>
-            </form>
+        <div class="form-group">
+            <label>Employee ID</label>
+            <input type="text" name="employeeId" placeholder="e.g., EMP001" required>
         </div>
 
-        <a href="admin-dashboard.jsp" class="back-link">⬅ Back to Dashboard</a>
-    </div>
+        <div class="form-group">
+            <label>Employee Name</label>
+            <input type="text" name="employeeName" placeholder="Enter full name" required>
+        </div>
 
-</body>
-</html>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username for login" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Add Staff</button>
+    </form>
+
+</div>

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/StaffServlet")
 public class StaffServlet extends HttpServlet {
 
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
@@ -38,7 +39,7 @@ public class StaffServlet extends HttpServlet {
             check.setString(1, username);
             ResultSet rs = check.executeQuery();
             if (rs.next()) {
-                request.setAttribute("errorMsg", "Username already exists!");
+                session.setAttribute("errorMsg", "Username already exists!");
             } else {
                 PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO users (employee_id, employee_name, username, password_hash, role) VALUES (?, ?, ?, ?, ?)"
@@ -49,19 +50,20 @@ public class StaffServlet extends HttpServlet {
                 ps.setString(4, password);
                 ps.setString(5, "RECEPTIONIST");
                 ps.executeUpdate();
-                request.setAttribute("successMsg", "Staff added successfully!");
+                session.setAttribute("successMsg", "Staff added successfully!");
             }
 
-            request.getRequestDispatcher("add-staff.jsp").forward(request, response);
+            
+            response.sendRedirect("LayoutServlet?page=add-staff");
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMsg", "Database Error: " + e.getMessage());
-            request.getRequestDispatcher("add-staff.jsp").forward(request, response);
+            session.setAttribute("errorMsg", "Database Error: " + e.getMessage());
+            response.sendRedirect("LayoutServlet?page=add-staff");
         }
     }
 
-    
+  
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
@@ -91,18 +93,19 @@ public class StaffServlet extends HttpServlet {
                     PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE user_id=?");
                     ps.setInt(1, id);
                     ps.executeUpdate();
-                    request.setAttribute("successMsg", "Staff deleted successfully!");
+                    session.setAttribute("successMsg", "Staff deleted successfully!");
                 } else {
-                    request.setAttribute("errorMsg", "Cannot delete admin account!");
+                    session.setAttribute("errorMsg", "Cannot delete admin account!");
                 }
             }
 
-            request.getRequestDispatcher("view-staff.jsp").forward(request, response);
+            
+            response.sendRedirect("LayoutServlet?page=view-staff");
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMsg", "Database Error: " + e.getMessage());
-            request.getRequestDispatcher("view-staff.jsp").forward(request, response);
+            session.setAttribute("errorMsg", "Database Error: " + e.getMessage());
+            response.sendRedirect("LayoutServlet?page=view-staff");
         }
     }
 }
