@@ -224,14 +224,16 @@
                 <span>Book Appointment</span>
             </a>
            
- <a href="UserLayoutServlet?page=view-appointments" class="side-item <%= "view-appointments".equals(pageName) ? "active" : "" %>">
-    <span class="side-icon">▣</span>
-    <span>View Appointments</span>
-</a>
-            <a href="#" class="side-item">
-                <span class="side-icon">●</span>
+            <a href="UserLayoutServlet?page=view-appointments" class="side-item <%= "view-appointments".equals(pageName) ? "active" : "" %>">
+                <span class="side-icon">▣</span>
+                <span>View Appointments</span>
+            </a>
+
+            <a href="UserLayoutServlet?page=view-bills" class="side-item <%= "view-bills".equals(pageName) ? "active" : "" %>">
+                <span class="side-icon">🧾</span>
                 <span>View Bills</span>
             </a>
+
             <a href="#" class="side-item">
                 <span class="side-icon">?</span>
                 <span>Help</span>
@@ -268,6 +270,7 @@
             String contentPage = "user-dashboard-content.jsp";
             if ("book-appointment".equals(pageName)) contentPage = "book-appointment.jsp";
             else if ("view-appointments".equals(pageName)) contentPage = "view-appointments.jsp";
+            else if ("view-bills".equals(pageName)) contentPage = "view-bills.jsp";
         %>
         <jsp:include page="<%= contentPage %>" />
 

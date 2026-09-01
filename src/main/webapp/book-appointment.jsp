@@ -19,14 +19,14 @@
         session.removeAttribute("errorMsg");
     }
 
-    // SEARCH BY CONTACT NUMBER ONLY
+    
     String searchQuery = request.getParameter("searchQuery");
     List<Map<String, String>> patientResults = new ArrayList<>();
     String selectedPatientId = request.getParameter("selectedPatientId");
     String selectedPatientName = "";
     String selectedPatientContact = "";
 
-    // Search for patients - CONTACT NUMBER ONLY
+    
     if (searchQuery != null && !searchQuery.trim().isEmpty()) {
         try {
             Connection conn = DatabaseConnection.getInstance().getConnection();
@@ -293,7 +293,7 @@
         flex: 1;
     }
 
-    /* NEW: Container for search section to hide/show */
+   
     #searchSection {
         transition: all 0.3s ease;
     }
@@ -334,7 +334,7 @@
         }
     %>
 
-    <!-- SEARCH FORM - WRAPPED IN DIV WITH ID -->
+    
     <div id="searchSection">
         <form action="UserLayoutServlet" method="get">
             <input type="hidden" name="page" value="book-appointment">
@@ -347,7 +347,7 @@
             </div>
         </form>
 
-        <!-- SEARCH RESULTS -->
+        
         <%
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
         %>
@@ -378,17 +378,17 @@
         %>
     </div>
 
-    <!-- MAIN BOOKING FORM -->
+    
     <form action="AppointmentServlet" method="post">
 
-        <!-- Appointment Number -->
+        
         <div class="form-group">
             <label>Appointment Number</label>
             <input type="text" value="<%= appointmentNumber %>" disabled class="readonly-display">
             <input type="hidden" name="appointmentNumber" value="<%= appointmentNumber %>">
         </div>
 
-        <!-- Patient Type -->
+        
         <div class="form-group">
             <label>Patient Type</label>
             <div class="patient-type-group">
@@ -401,7 +401,7 @@
             </div>
         </div>
 
-        <!-- Existing Patient Section -->
+        
         <div id="existingSection">
             <input type="hidden" name="selectedPatientId" id="selectedPatientId" value="<%= selectedPatientId != null ? selectedPatientId : "" %>">
             <div class="form-grid">
@@ -416,7 +416,7 @@
             </div>
         </div>
 
-        <!-- New Patient Section -->
+       
         <div id="newSection" class="hidden">
             <div class="form-grid">
                 <div class="form-group">
