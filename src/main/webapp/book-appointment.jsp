@@ -31,10 +31,9 @@
         try {
             Connection conn = DatabaseConnection.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT patient_id, name, contact_number FROM patients WHERE name LIKE ? OR contact_number LIKE ? LIMIT 10"
+                "SELECT patient_id, name, contact_number FROM patients WHERE contact_number LIKE ? LIMIT 10"
             );
             ps.setString(1, "%" + searchQuery.trim() + "%");
-            ps.setString(2, "%" + searchQuery.trim() + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Map<String, String> patient = new HashMap<>();
@@ -48,7 +47,7 @@
         }
     }
 
-    
+    // If patient selected, get details
     if (selectedPatientId != null && !selectedPatientId.isEmpty()) {
         try {
             Connection conn = DatabaseConnection.getInstance().getConnection();
@@ -66,7 +65,7 @@
         }
     }
 
-    
+    // Generate appointment number
     String appointmentNumber = "APP-001";
     try {
         Connection conn = DatabaseConnection.getInstance().getConnection();
@@ -294,6 +293,11 @@
         flex: 1;
     }
 
+   
+    #searchSection {
+        transition: all 0.3s ease;
+    }
+
     @media (max-width: 768px) {
         .form-grid {
             grid-template-columns: 1fr;
@@ -331,46 +335,48 @@
     %>
 
     
-    <form action="UserLayoutServlet" method="get">
-        <input type="hidden" name="page" value="book-appointment">
-        <div class="form-group">
-            <label>Search Patient (by Name or Contact Number)</label>
-            <div class="patient-search-box">
-                <input type="text" name="searchQuery" placeholder="Type name or contact number..." value="<%= searchQuery != null ? searchQuery : "" %>">
-                <button type="submit" class="btn-secondary">Search</button>
-            </div>
-        </div>
-    </form>
-
-    
-    <%
-        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-    %>
-        <div class="search-results" style="display: block;">
-            <%
-                if (patientResults.isEmpty()) {
-            %>
-                <div class="search-result-item" style="color: rgba(255,255,255,0.4); justify-content: center;">No patients found. Please register a new patient.</div>
-            <%
-                } else {
-                    for (Map<String, String> p : patientResults) {
-            %>
-                <div class="search-result-item">
-                    <span><strong><%= p.get("name") %></strong> (ID: <%= p.get("id") %>) - <%= p.get("contact") %></span>
-                    <form action="UserLayoutServlet" method="get" style="margin: 0;">
-                        <input type="hidden" name="page" value="book-appointment">
-                        <input type="hidden" name="selectedPatientId" value="<%= p.get("id") %>">
-                        <button type="submit" class="select-btn">Select</button>
-                    </form>
+    <div id="searchSection">
+        <form action="UserLayoutServlet" method="get">
+            <input type="hidden" name="page" value="book-appointment">
+            <div class="form-group">
+                <label>Search Patient (by Contact Number)</label>
+                <div class="patient-search-box">
+                    <input type="text" name="searchQuery" placeholder="Type contact number..." value="<%= searchQuery != null ? searchQuery : "" %>">
+                    <button type="submit" class="btn-secondary">Search</button>
                 </div>
-            <%
+            </div>
+        </form>
+
+        
+        <%
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+        %>
+            <div class="search-results" style="display: block;">
+                <%
+                    if (patientResults.isEmpty()) {
+                %>
+                    <div class="search-result-item" style="color: rgba(255,255,255,0.4); justify-content: center;">No patients found. Please register a new patient.</div>
+                <%
+                    } else {
+                        for (Map<String, String> p : patientResults) {
+                %>
+                    <div class="search-result-item">
+                        <span><strong><%= p.get("name") %></strong> (ID: <%= p.get("id") %>) - <%= p.get("contact") %></span>
+                        <form action="UserLayoutServlet" method="get" style="margin: 0;">
+                            <input type="hidden" name="page" value="book-appointment">
+                            <input type="hidden" name="selectedPatientId" value="<%= p.get("id") %>">
+                            <button type="submit" class="select-btn">Select</button>
+                        </form>
+                    </div>
+                <%
+                        }
                     }
-                }
-            %>
-        </div>
-    <%
-        }
-    %>
+                %>
+            </div>
+        <%
+            }
+        %>
+    </div>
 
     
     <form action="AppointmentServlet" method="post">
@@ -410,7 +416,7 @@
             </div>
         </div>
 
-        
+       
         <div id="newSection" class="hidden">
             <div class="form-grid">
                 <div class="form-group">
@@ -487,16 +493,19 @@
     function togglePatientType(type) {
         const existingSection = document.getElementById('existingSection');
         const newSection = document.getElementById('newSection');
+        const searchSection = document.getElementById('searchSection');
 
         if (type === 'existing') {
             existingSection.classList.remove('hidden');
             newSection.classList.add('hidden');
+            searchSection.style.display = 'block';
             document.getElementById('newPatientName').required = false;
             document.getElementById('newPatientContact').required = false;
             document.getElementById('newPatientAddress').required = false;
         } else {
             existingSection.classList.add('hidden');
             newSection.classList.remove('hidden');
+            searchSection.style.display = 'none';
             document.getElementById('newPatientName').required = true;
             document.getElementById('newPatientContact').required = true;
             document.getElementById('newPatientAddress').required = true;

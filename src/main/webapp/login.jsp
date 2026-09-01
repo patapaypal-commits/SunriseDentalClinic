@@ -6,6 +6,8 @@
 
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
@@ -13,8 +15,8 @@
             background-image: url('background.png');
             background-size: cover;
             background-position: center;
-            background-color: #F4F8FB;
-            font-family: Arial, Helvetica, sans-serif;
+            background-color: #1A1A2E;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
             display: flex;
             justify-content: flex-end;
             align-items: center;
@@ -24,109 +26,103 @@
         }
 
         .login-box {
-            width: 440px;
-            min-height: 500px;
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 28px;
-            box-shadow: 0 15px 45px rgba(30, 60, 100, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            width: 420px;
+            min-height: 480px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             overflow: hidden;
+            padding: 40px 36px;
         }
 
         .header {
-            background: transparent;
-            padding: 45px 30px 15px;
             text-align: center;
-        }
-
-        .header::before {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 78px;
-            height: 78px;
-            margin: 0 auto 25px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 5px 20px rgba(30, 60, 100, 0.12);
-            font-size: 34px;
+            margin-bottom: 28px;
         }
 
         .header h1 {
-            color: #263e5e;
-            font-size: 30px;
-            margin: 0;
+            color: #FFFFFF;
+            font-size: 28px;
             font-weight: 600;
+            margin: 0;
         }
 
         .header h1::after {
             content: "Login to continue to Sunrise Dental Care";
             display: block;
-            color: #687789;
+            color: rgba(255, 255, 255, 0.4);
             font-size: 14px;
             font-weight: normal;
-            margin-top: 12px;
+            margin-top: 8px;
         }
 
         .body {
-            padding: 25px 45px 50px;
+            width: 100%;
         }
 
         label {
-            color: #2C3E50;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            font-size: 14px;
             display: block;
-            margin-bottom: 7px;
+            margin-bottom: 6px;
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 16px 18px;
-            margin: 0 0 22px 0;
-            border: 1px solid #d7e0ea;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            color: #2C3E50;
+            padding: 12px 16px;
+            margin: 0 0 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #FFFFFF;
             font-size: 15px;
-            transition: 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: 'Times New Roman', Times, serif;
         }
 
         input[type="text"]:focus,
         input[type="password"]:focus {
             outline: none;
-            border-color: #4d8ed6;
-            box-shadow: 0 0 0 4px rgba(77, 142, 214, 0.12);
+            border-color: #3D83C7;
+            box-shadow: 0 0 0 3px rgba(61, 131, 199, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: rgba(255, 255, 255, 0.25);
         }
 
         .btn {
-            background: linear-gradient(135deg, #3d83c7, #2f67ad);
+            background: rgba(61, 131, 199, 0.8);
             color: white;
-            padding: 16px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 13px;
+            border-radius: 10px;
             cursor: pointer;
             width: 100%;
-            font-size: 17px;
-            font-weight: 500;
-            box-shadow: 0 8px 18px rgba(47, 103, 173, 0.25);
-            transition: 0.3s;
-            margin-top: 5px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Times New Roman', Times, serif;
+            transition: background 0.3s;
+            margin-top: 4px;
         }
 
         .btn:hover {
-            background: linear-gradient(135deg, #3477ba, #255894);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 22px rgba(47, 103, 173, 0.3);
+            background: #3D83C7;
         }
 
         .error {
-            color: #d9534f;
+            color: #e74c3c;
             text-align: center;
             margin-bottom: 18px;
             font-size: 14px;
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
@@ -135,10 +131,10 @@
                 padding-right: 0;
                 padding: 20px;
             }
-
             .login-box {
                 width: 100%;
-                max-width: 440px;
+                max-width: 420px;
+                padding: 30px 24px;
             }
         }
     </style>
@@ -159,10 +155,10 @@
         <form action="LoginServlet" method="post">
 
             <label>Username</label>
-            <input type="text" name="username" required>
+            <input type="text" name="username" placeholder="Enter your username" required>
 
             <label>Password</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" placeholder="Enter your password" required>
 
             <button type="submit" class="btn">Login</button>
 
