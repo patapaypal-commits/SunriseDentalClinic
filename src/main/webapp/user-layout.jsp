@@ -234,7 +234,7 @@
                 <span>View Bills</span>
             </a>
 
-            <a href="#" class="side-item">
+            <a href="UserLayoutServlet?page=help" class="side-item <%= "help".equals(pageName) ? "active" : "" %>">
                 <span class="side-icon">?</span>
                 <span>Help</span>
             </a>
@@ -271,6 +271,7 @@
             if ("book-appointment".equals(pageName)) contentPage = "book-appointment.jsp";
             else if ("view-appointments".equals(pageName)) contentPage = "view-appointments.jsp";
             else if ("view-bills".equals(pageName)) contentPage = "view-bills.jsp";
+            else if ("help".equals(pageName)) contentPage = "help.jsp";
         %>
         <jsp:include page="<%= contentPage %>" />
 
