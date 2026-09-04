@@ -9,6 +9,8 @@ public class PatientService {
     public int registerPatient(String name, String address, String contact) {
         if (name == null || name.trim().isEmpty())
             throw new IllegalArgumentException("Name is required!");
+        if (address == null || address.trim().isEmpty())
+            throw new IllegalArgumentException("Address is required!");
         if (!contact.matches("\\d{10,15}"))
             throw new IllegalArgumentException("Contact must be 10-15 digits!");
 
